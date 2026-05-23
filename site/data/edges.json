@@ -1,6 +1,25 @@
 [
   {
     "source": 1,
+    "target": 2,
+    "type": "root",
+    "rationale": "需求曲線往下傾斜，骨子裡就是邊際效用遞減——第二杯啤酒不值第一杯的價，供需法則只是把這條心理曲線翻譯成市場語言。"
+  },
+  {
+    "source": 1,
+    "target": 6,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "供需是兩股力，均衡是它們撞出來的點——沒有供需法則描述雙方行為，就沒有均衡這個概念可言；先講機制，才講結果。"
+  },
+  {
+    "source": 1,
+    "target": 14,
+    "type": "complementary",
+    "rationale": "供需給你市場價格的中位線，價格歧視則教你把同一條曲線切成多段定價——一個畫全景，一個教你榨取每塊消費者剩餘。"
+  },
+  {
+    "source": 1,
     "target": 30,
     "type": "complementary",
     "rationale": "供需訂出市場均衡價，錨定決定個體心中的「合理價」——前者是黑板上的清算點，後者解釋為何同一杯咖啡標 80 元被嫌貴、標 280 元卻覺得划算。"
@@ -13,9 +32,35 @@
   },
   {
     "source": 2,
+    "target": 14,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "每位顧客的願付價格不同，正是邊際效用遞減的副產品——沒有這條遞減，所有人都付同一個價，價格歧視就無利可圖。"
+  },
+  {
+    "source": 2,
     "target": 33,
     "type": "root",
     "rationale": "都是價值函數的曲率——邊際效用遞減描述獲得端越吃越淡，損失厭惡描述失去端跌得更陡；Kahneman 的 S 型曲線就是把這兩條凹凸接在原點兩側。"
+  },
+  {
+    "source": 3,
+    "target": 4,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "比較優勢的核心不是誰絕對厲害，而是誰的機會成本更低——沒有機會成本這把尺，李嘉圖那套分工邏輯根本算不出來。"
+  },
+  {
+    "source": 3,
+    "target": 15,
+    "type": "root",
+    "rationale": "都是金錢的方向性——機會成本盯著未來放棄的，沉沒成本盯著過去花掉的；理性決策只看前者，人性卻常困在後者。"
+  },
+  {
+    "source": 3,
+    "target": 20,
+    "type": "complementary",
+    "rationale": "創造性破壞把舊資產的機會成本一夜歸零——Kodak 抓著底片廠不放，就是沒算清楚轉投數位的機會成本已遠大於沉浸現狀。"
   },
   {
     "source": 3,
@@ -30,10 +75,146 @@
     "rationale": "機會成本要你冷靜評估放棄哪一個選項代價最小，稟賦效應卻讓「已經是我的」自動加價兩三成——理性算放棄，人性算佔有。"
   },
   {
+    "source": 3,
+    "target": 47,
+    "type": "isomorphism",
+    "rationale": "兩者都把「真正的代價在別處」結構化——機會成本指向你沒選的那條路，約束理論指向你沒優化的那個瓶頸；優化非瓶頸環節等於白燒錢。"
+  },
+  {
+    "source": 3,
+    "target": 61,
+    "type": "complementary",
+    "rationale": "機會成本盯著「沒選的那條路」，反事實推理把那條路想清楚——少了反事實，機會成本只是抽象口號，無法落到實際決策。"
+  },
+  {
+    "source": 63,
+    "target": 3,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "先認清能力圈，機會成本才算得準——圈外的選項報酬是幻覺，拿幻覺當次佳選項，會逼自己放棄真正擅長的事。"
+  },
+  {
+    "source": 4,
+    "target": 5,
+    "type": "complementary",
+    "rationale": "比較優勢決定該做什麼，規模經濟決定做了之後成本曲線怎麼跑——前者選賽道，後者決定能不能在賽道上甩開對手。"
+  },
+  {
+    "source": 4,
+    "target": 51,
+    "type": "isomorphism",
+    "rationale": "經濟學的分工同構於生態學的分化——物種佔據獨特生態位才能共存，企業守住自己機會成本最低的領域才不會被全面碾壓，邏輯完全平行。"
+  },
+  {
+    "source": 63,
+    "target": 4,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "比較優勢要落地，先得知道自己圈在哪——能力圈劃清楚，才談得上哪件事機會成本最低，否則「專注擅長」只是口號。"
+  },
+  {
+    "source": 5,
+    "target": 10,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "先有成本端規模優勢，才支撐得起用戶端網路效應的擴張投資——順序顛倒會燒光現金。"
+  },
+  {
+    "source": 5,
+    "target": 27,
+    "type": "complementary",
+    "rationale": "規模壓低你的成本，轉換成本鎖住對手的客戶——兩道護城河疊在一起，新進者既打不贏價格戰、也撬不動既有用戶。"
+  },
+  {
+    "source": 5,
+    "target": 41,
+    "type": "isomorphism",
+    "rationale": "規模經濟的「大就便宜、便宜就更大」本質是時間軸上的複利——每多賣一單位都把單位成本壓低、讓下一輪更具優勢，幾何級數而非線性。"
+  },
+  {
+    "source": 5,
+    "target": 43,
+    "type": "isomorphism",
+    "rationale": "規模經濟是典型的自我增強反饋迴路——產量增加壓低成本，低成本擴大市佔，市佔再餵更高產量；Walmart 與 Amazon 都靠這個迴路碾壓對手。"
+  },
+  {
+    "source": 6,
+    "target": 19,
+    "type": "complementary",
+    "rationale": "教科書的均衡假設資訊免費流通，搜尋成本則告訴你現實裡撮合根本要錢——一個給理想模型，一個解釋為何房仲與 Google 能賺錢。"
+  },
+  {
+    "source": 6,
+    "target": 28,
+    "type": "complementary",
+    "rationale": "單邊市場的均衡靠價格調整，雙邊市場還得同時平衡兩群人——平台定價要同時讓買賣兩端都待得住，傳統均衡分析會漏掉一半。"
+  },
+  {
+    "source": 7,
+    "target": 8,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "賽局理論是母體，囚徒困境是它最有名的特例——沒有先把互動視為策略賽局，根本看不出個體理性為何會走向集體次優。"
+  },
+  {
+    "source": 7,
+    "target": 11,
+    "type": "complementary",
+    "rationale": "賽局分析現有規則下的均衡，激勵機制設計則反過來改規則——前者讀牌，後者發牌，合在一起才叫機制設計。"
+  },
+  {
+    "source": 7,
+    "target": 62,
+    "type": "complementary",
+    "rationale": "賽局要從對手反應倒推，逆向思考剛好提供這套思維——先問對方怎麼打才會贏，再回推自己這手該怎麼下。"
+  },
+  {
+    "source": 8,
+    "target": 9,
+    "type": "root",
+    "rationale": "都是個體理性與集體理性的衝突——囚徒困境兩人版，公地悲劇 N 人版，骨子裡同一條不合作邏輯，只是放牧的牛換成牢房。"
+  },
+  {
+    "source": 8,
+    "target": 11,
+    "type": "complementary",
+    "rationale": "囚徒困境告訴你天然的均衡是雙輸，激勵機制告訴你怎麼把報酬矩陣改寫成合作有利——一個診斷病灶，一個開處方。"
+  },
+  {
     "source": 8,
     "target": 36,
     "type": "antithetical",
     "rationale": "囚徒困境預測理性人必然背叛、集體必受傷；互惠原則卻顯示人有強烈回報衝動足以撐起合作——這是現實中重複賽局比理論樂觀的關鍵。"
+  },
+  {
+    "source": 9,
+    "target": 18,
+    "type": "root",
+    "rationale": "公地悲劇是負外部性的標準案例——過度放牧的成本攤給全村，個人卻獨享產出；同一條外部性邏輯，只是換上公共財的場景。"
+  },
+  {
+    "source": 9,
+    "target": 64,
+    "type": "complementary",
+    "rationale": "公地悲劇是「一階理性、二階災難」的典型——只想「我多用一點不會怎樣」就走進陷阱，二階思考補上集體視角。"
+  },
+  {
+    "source": 10,
+    "target": 25,
+    "type": "complementary",
+    "rationale": "網路效應讓你越用越捨不得換，路徑依賴讓整個產業卡在次優標準——QWERTY 鍵盤就是兩者合力的活化石，效率輸給歷史。"
+  },
+  {
+    "source": 10,
+    "target": 27,
+    "type": "complementary",
+    "rationale": "網路效應提高離開的痛，轉換成本量化這個痛——前者解釋為何不想走，後者算出走的代價有多高，是平台護城河的一體兩面。"
+  },
+  {
+    "source": 10,
+    "target": 28,
+    "type": "complementary",
+    "rationale": "雙邊市場是舞台，網路效應是讓舞台越擠越熱鬧的引擎——Uber、Airbnb 缺了任一邊都崩盤，靠網路效應才把雪球滾起來。"
   },
   {
     "source": 10,
@@ -42,11 +223,104 @@
     "rationale": "網路效應是供給端的價值放大器，社會認同是需求端的決策捷徑——平台越用越好用、新用戶看到人多就跳上車，兩股力量湊齊才有 winner-takes-all。"
   },
   {
+    "source": 42,
+    "target": 10,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "沒跨過臨界質量，網路效應根本啟動不了——少數早期用戶撐不起來就會自我熄滅；先想清楚怎麼點火，再談飛輪。"
+  },
+  {
+    "source": 10,
+    "target": 43,
+    "type": "isomorphism",
+    "rationale": "網路效應就是用戶端的正反饋迴路——每多一個用戶提高了所有其他人的價值，再回頭吸引更多用戶；FB、微信都靠這條曲線壟斷。"
+  },
+  {
+    "source": 10,
+    "target": 48,
+    "type": "isomorphism",
+    "rationale": "網路效應跨過臨界點後產品從「沒人用」突變成「不能不用」——這是物理相變式的非線性突變，不是線性成長的延伸。"
+  },
+  {
+    "source": 10,
+    "target": 52,
+    "type": "isomorphism",
+    "rationale": "平台與用戶的雙向加值同構於生物互利共生——蘋果與開發者共榮、Uber 與司機互生；但同樣結構也能滑向寄生（抽成過重、鎖死供應端）。"
+  },
+  {
+    "source": 11,
+    "target": 12,
+    "type": "complementary",
+    "rationale": "激勵設計不當就會養出道德風險——銀行高管獎金看短期績效、虧損由股東吞，2008 房貸危機就是這條鏈條炸開的結果。"
+  },
+  {
+    "source": 11,
+    "target": 18,
+    "type": "complementary",
+    "rationale": "外部性是市場沒收費的那塊，激勵機制是政府或企業把它重新內部化的工具——碳稅就是用激勵硬把空氣的負外部性塞回成本表。"
+  },
+  {
+    "source": 11,
+    "target": 59,
+    "type": "complementary",
+    "rationale": "激勵設計顧人「想怎麼幹」，FMEA 補機制「可能怎麼壞」——前者管誘因、後者堵漏洞，Wells Fargo 醜聞即少了後者的代價。"
+  },
+  {
+    "source": 11,
+    "target": 64,
+    "type": "complementary",
+    "rationale": "誘因設計常死在二階效應——你獎勵 KPI，員工就優化 KPI 而非業務。設完誘因再問一次「然後呢」，才抓得出扭曲。"
+  },
+  {
+    "source": 12,
+    "target": 13,
+    "type": "root",
+    "rationale": "都是資訊不對稱的後果——道德風險發生在交易後（行為改變），逆向選擇發生在交易前（品質篩選）；同一棵樹的兩根分枝。"
+  },
+  {
+    "source": 16,
+    "target": 12,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "資訊不對稱是條件，道德風險是後果——保險公司看不到投保人開車有多猛，這個資訊落差才讓被保人敢踩油門。"
+  },
+  {
+    "source": 12,
+    "target": 45,
+    "type": "lollapalooza",
+    "rationale": "兩者單獨已危險，疊加成核爆——槓桿放大每一個錯誤，道德風險讓人更敢押滿；2008 房貸危機就是這兩條互鎖、再加上隱性擔保的教科書案例。"
+  },
+  {
+    "source": 16,
+    "target": 13,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "賣方比買方更懂車況，逆向選擇才會把好車逼出市場——Akerlof 的檸檬市場整套立論，起點就是這個資訊落差。"
+  },
+  {
+    "source": 13,
+    "target": 28,
+    "type": "complementary",
+    "rationale": "雙邊市場最怕逆向選擇——Airbnb 如果只剩爛房東、Uber 只剩爛司機，需求端瞬間崩盤；平台的審核機制本質是逆選對抗賽。"
+  },
+  {
+    "source": 14,
+    "target": 19,
+    "type": "complementary",
+    "rationale": "搜尋成本越高，賣方越容易玩價格歧視——機場書店敢賣天價就是賭你不會走去隔壁比價，兩者一起構成定價權的支柱。"
+  },
+  {
     "source": 30,
     "target": 14,
     "type": "precondition",
     "directed": true,
     "rationale": "沒有錨點作為比較基準，價格歧視的層級定價就無從生效——標出原價再打折、設高階版讓中階版顯得划算，都是先植入錨點、再分層榨取。"
+  },
+  {
+    "source": 14,
+    "target": 51,
+    "type": "isomorphism",
+    "rationale": "把客群按支付意願切分，就像物種按資源利用切生態位——每一段都吃得到別人吃不到的、各自不直接競爭；航空艙等與會員制都是這個結構。"
   },
   {
     "source": 15,
@@ -67,6 +341,19 @@
     "rationale": "心理帳戶解釋為何沉沒成本特別難放掉——當投入被獨立記到「裝潢專案」或「MBA 學費」那本帳，要結清就得單獨認列虧損，比混在大池子裡痛得多。"
   },
   {
+    "source": 15,
+    "target": 61,
+    "type": "complementary",
+    "rationale": "沉沒成本難放，是因為腦中只跑「已投入這麼多」——反事實推理逼你想「如果今天從零開始我還會做嗎」，這一問就把專案救回來。"
+  },
+  {
+    "source": 62,
+    "target": 15,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "破解沉沒成本要先學會逆向——不問「怎麼把錢救回來」，改問「怎樣會把錢燒光」，退場決策才開得了口。"
+  },
+  {
     "source": 16,
     "target": 34,
     "type": "precondition",
@@ -82,15 +369,82 @@
   },
   {
     "source": 17,
+    "target": 21,
+    "type": "antithetical",
+    "rationale": "EMH 說價格反映一切資訊，反射性說價格反過來改變現實——後者解釋為何泡沫不只是「非理性」，而是市場結構本身會孕育泡沫。"
+  },
+  {
+    "source": 17,
     "target": 32,
     "type": "antithetical",
     "rationale": "EMH 主張沒人能持續打敗市場，過度自信卻讓九成主動型基金經理人深信自己是那一成——一個冷冰冰的統計事實，一個從不退場的心理事實，年年對撞。"
+  },
+  {
+    "source": 17,
+    "target": 57,
+    "type": "antithetical",
+    "rationale": "EMH 假設報酬服從鐘形、價格已反映一切；黑天鵝直指尾端風險被嚴重低估——2008 雷曼倒下正是兩種世界觀對撞的結果。"
   },
   {
     "source": 18,
     "target": 31,
     "type": "complementary",
     "rationale": "外部性解釋成本為何被忽略，可得性捷思解釋為何忽略得心安理得——氣候風險算不到自己頭上、新聞又不天天播，兩層失靈讓對策永遠慢一拍。"
+  },
+  {
+    "source": 18,
+    "target": 64,
+    "type": "complementary",
+    "rationale": "外部性是別人吃下你的二階後果——污染、塞車都是。二階思考補上「成本飄到哪去」的鏡頭，光看損益表會嚴重低估衝擊。"
+  },
+  {
+    "source": 19,
+    "target": 28,
+    "type": "complementary",
+    "rationale": "雙邊市場的核心價值正是壓低搜尋成本——沒有平台時計程車與乘客在街頭瞎晃，Uber 把這隻隱形稅折半，再從中抽一成。"
+  },
+  {
+    "source": 20,
+    "target": 25,
+    "type": "antithetical",
+    "rationale": "一個說產業會新陳代謝、一個說組織會被歷史鎖定——同一現象常被兩股力量同時拉扯（Kodak 既被破壞、也是被自己路徑卡死）。"
+  },
+  {
+    "source": 20,
+    "target": 44,
+    "type": "complementary",
+    "rationale": "熵說明組織不持續注入能量就退化，創造性破壞則是市場替你強制注入——一個是退化的必然，一個是被迫更新的機制，合起來才看清產業生死。"
+  },
+  {
+    "source": 20,
+    "target": 48,
+    "type": "isomorphism",
+    "rationale": "產業從舊範式跳到新範式是相變式突變——智慧型手機之於功能機不是漸進改良，而是整個生態的相態切換；Nokia 至死沒看懂這點。"
+  },
+  {
+    "source": 20,
+    "target": 49,
+    "type": "isomorphism",
+    "rationale": "Schumpeter 直接借用 Darwin——市場的競爭淘汰同構於自然選擇的壓力，不適應的物種與商業模式都會被環境淘汰，這是同一條邏輯的兩個版本。"
+  },
+  {
+    "source": 20,
+    "target": 50,
+    "type": "complementary",
+    "rationale": "創造性破壞是外部壓力，適應性是組織的回應——前者問市場會不會殺你，後者問你變不變得了；少了任何一邊都看不到 Kodak 真正怎麼死的。"
+  },
+  {
+    "source": 58,
+    "target": 20,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "不打破產業既有假設，就生不出真正的破壞——第一原理是創造性破壞的認知前提，Musk 重算火箭與電池成本就是教科書示範。"
+  },
+  {
+    "source": 21,
+    "target": 24,
+    "type": "complementary",
+    "rationale": "資產漲讓人覺得有錢，覺得有錢又推升消費與投資、繼續抬資產——財富效應是反射性循環在實體經濟端的放大器，房市最明顯。"
   },
   {
     "source": 21,
@@ -105,10 +459,28 @@
     "rationale": "都是「看法改變現實、現實又回頭改變看法」的同一隻獸——從眾是這條迴路的微觀心理機制，反射性是它在市場價格上展開的宏觀型態。"
   },
   {
+    "source": 21,
+    "target": 43,
+    "type": "isomorphism",
+    "rationale": "Soros 的反射性其實就是把反饋迴路套到金融市場——預期改變現實、現實再改變預期；同一個系統動力學概念換了個學科外殼。"
+  },
+  {
+    "source": 22,
+    "target": 24,
+    "type": "complementary",
+    "rationale": "央行放水推升資產價格，資產價格又催出財富效應的消費——貨幣數量理論講總量，財富效應講傳導，合起來就是 QE 的真實腳本。"
+  },
+  {
     "source": 22,
     "target": 39,
     "type": "antithetical",
     "rationale": "貨幣數量說錢印多了物價會漲，稀缺心態卻指出口袋變厚後認知匱乏仍持續耗損決策——印鈔解得了通縮，解不了窮人腦袋裡的稀缺循環。"
+  },
+  {
+    "source": 22,
+    "target": 44,
+    "type": "isomorphism",
+    "rationale": "印越多錢稀釋每張紙的購買力，同構於熵增——能量總量不變但分布更均勻、單位有效性下降；通膨本質是貨幣資訊量的稀釋。"
   },
   {
     "source": 23,
@@ -123,6 +495,19 @@
     "rationale": "都指向「窮人為何更短視」的同一機制——時間偏好描述折現率，稀缺心態解釋為何資源匱乏時折現率會飆高，兩者其實是同一個現象的兩端描述。"
   },
   {
+    "source": 23,
+    "target": 41,
+    "type": "antithetical",
+    "rationale": "時間偏好讓人想立刻花掉，複利效應卻獎勵延遲滿足——一條人性偏向、一條數學鐵律，兩股力相互拉扯，能不能克服前者就決定能否享受後者。"
+  },
+  {
+    "source": 63,
+    "target": 23,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "時間偏好要做得準，先得知道自己在判斷什麼——能力圈外的長期投資再誘人，貼現算出來都是賭。"
+  },
+  {
     "source": 24,
     "target": 38,
     "type": "complementary",
@@ -135,6 +520,49 @@
     "rationale": "財富效應本質上是心理帳戶在動作——未實現的股票或房價漲幅被撥到「意外之財」帳戶，花錢規則比薪資寬鬆，所以資產上漲時消費也跟著大手筆。"
   },
   {
+    "source": 25,
+    "target": 27,
+    "type": "root",
+    "rationale": "都是鎖定效應的兩個面——路徑依賴從歷史視角看為何走不出來，轉換成本從個體決策看為何不想走；同一道牆，兩個角度量。"
+  },
+  {
+    "source": 25,
+    "target": 44,
+    "type": "complementary",
+    "rationale": "熵說明組織會自然退化，路徑依賴解釋為何即使想改也改不動——一個給你必然衰退的物理底色，一個給你被歷史鎖死的組織解釋，合看才完整。"
+  },
+  {
+    "source": 41,
+    "target": 26,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "持續複利的差距在時間軸上被放大，最後就長出冪次分布的長尾——複利是少數贏家通吃的數學引擎，沒有它就沒有 80/20 那條曲線。"
+  },
+  {
+    "source": 26,
+    "target": 49,
+    "type": "isomorphism",
+    "rationale": "自然選擇下的繁衍優勢會累積成極端分布，同構於市場的冪次法則——前 1% 物種佔據多數生物量，前 1% 公司賺走多數利潤，同一數學形狀。"
+  },
+  {
+    "source": 26,
+    "target": 54,
+    "type": "complementary",
+    "rationale": "冪次法則說大贏家極稀少，倖存者偏差說你看到的都是那群稀少者——只研究 Google 而忽略墳場，就會把運氣當公式照抄。"
+  },
+  {
+    "source": 26,
+    "target": 55,
+    "type": "complementary",
+    "rationale": "冪次法則描述分配極端不均，基礎機率提醒新創成功的分母只有 1%——兩條一起看，才不會把「結果極端」誤當「機率極高」。"
+  },
+  {
+    "source": 26,
+    "target": 57,
+    "type": "root",
+    "rationale": "都在描述「尾端比中央更重要」的同一現實——冪次法則講分配形狀、黑天鵝講事件衝擊，是肥尾世界的兩個切面。"
+  },
+  {
     "source": 27,
     "target": 35,
     "type": "complementary",
@@ -145,5 +573,486 @@
     "target": 36,
     "type": "complementary",
     "rationale": "轉換成本從硬體與流程鎖住客戶，互惠原則從人情與虧欠感鎖住客戶——B2B 業務送贈品、辦研討會的真正算盤不是宣傳，而是把心理債疊到合約之上。"
+  },
+  {
+    "source": 42,
+    "target": 28,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "雙邊市場若任一邊沒跨過臨界質量就整個崩——叫車平台缺司機或缺乘客都活不了；先想清楚怎麼把兩邊各自點火，再談撮合效率。"
+  },
+  {
+    "source": 28,
+    "target": 52,
+    "type": "isomorphism",
+    "rationale": "平台雙邊互相需要、彼此加值，本質同構於生物互利共生——但平台抽成過重時就從共生滑向寄生，Uber 司機抗議就是這個臨界點的訊號。"
+  },
+  {
+    "source": 29,
+    "target": 31,
+    "type": "complementary",
+    "rationale": "一個篩證據、一個調記憶——當你只記得支持自己的例子，又只去找支持的資料，兩股力量同方向疊加，誤判被鎖死。"
+  },
+  {
+    "source": 29,
+    "target": 32,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "確認偏誤是過度自信的養料——當你系統性過濾掉反證，自信就持續被「無反例」餵大；沒有確認偏誤墊底，自信撐不久。"
+  },
+  {
+    "source": 29,
+    "target": 37,
+    "type": "complementary",
+    "rationale": "權威提供你想聽的訊號，確認偏誤放大這個訊號——兩者搭配，董事會就出現典型悲劇：沒人挑戰執行長，因為大家本來就想同意。"
+  },
+  {
+    "source": 29,
+    "target": 50,
+    "type": "antithetical",
+    "rationale": "確認偏誤讓人緊抓舊信念、過濾不利訊號；適應性要求對環境變動誠實回應——前者是適應力的天敵，Kodak 拒認數位即實例。"
+  },
+  {
+    "source": 29,
+    "target": 54,
+    "type": "complementary",
+    "rationale": "倖存者偏差是資料端失真、確認偏誤是大腦端失真——前者讓你只看到贏家，後者只記得贏家中符合自己劇本的，雙重過濾。"
+  },
+  {
+    "source": 29,
+    "target": 56,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "確認偏誤是「相關當因果」的心理引擎——一旦預設 A 導致 B，你會自動接受任何相關證據作佐證，跳過反向因果的檢驗。"
+  },
+  {
+    "source": 29,
+    "target": 58,
+    "type": "antithetical",
+    "rationale": "確認偏誤把既有結論當前提；第一原理逼你拆到不可再分的事實再重組——兩種方向完全相反，後者正是用來鎖死前者的解藥。"
+  },
+  {
+    "source": 29,
+    "target": 60,
+    "type": "complementary",
+    "rationale": "確認偏誤讓人越想越複雜、只為保住結論；奧卡姆剃刀逼你選最簡解釋——配對可避免為了護航決策而堆出十層假設。"
+  },
+  {
+    "source": 62,
+    "target": 29,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "破解確認偏誤最快的方法就是逆向——主動找「我可能錯在哪」的證據。Munger 沒列反方論點就不下單，正是這條紀律。"
+  },
+  {
+    "source": 65,
+    "target": 29,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "確認偏誤的根源是把腦中地圖當領土——只蒐集地圖上對的證據。先承認地圖必有盲點，才會主動找反例。"
+  },
+  {
+    "source": 30,
+    "target": 33,
+    "type": "complementary",
+    "rationale": "錨定設參考點、損失厭惡決定偏離的痛感——兩者組合就是談判桌標準劇本：先丟高錨，再讓對方把每次讓步當損失計算。"
+  },
+  {
+    "source": 30,
+    "target": 40,
+    "type": "complementary",
+    "rationale": "錨定塞給你一個參考點，心理帳戶決定參考點放進哪個抽屜——前者扭曲數字大小，後者扭曲花用規則，兩種框架接力作用。"
+  },
+  {
+    "source": 31,
+    "target": 53,
+    "type": "complementary",
+    "rationale": "可得性讓你只記得極端事件，迴歸均值卻說極端會自動褪色——用最戲劇化記憶預測下一次，等於押注一個注定不重演的高點。"
+  },
+  {
+    "source": 31,
+    "target": 54,
+    "type": "complementary",
+    "rationale": "倖存者的故事最容易想到，可得性就是倖存者偏差的心理引擎——失敗者沒上封面，大腦抓不到，於是樣本被悄悄篩過一輪。"
+  },
+  {
+    "source": 31,
+    "target": 55,
+    "type": "root",
+    "rationale": "兩者都是「分母被丟掉」的同一錯誤——可得性用印象取代分母，基礎機率忽視分母本身；同一件事的心理面與統計面。"
+  },
+  {
+    "source": 31,
+    "target": 57,
+    "type": "complementary",
+    "rationale": "可得性讓你高估可想像的中段事件，黑天鵝偏偏躲在不可想像的尾端——前者餵養「世界很安全」的錯覺，後者揭示這錯覺致命。"
+  },
+  {
+    "source": 31,
+    "target": 61,
+    "type": "complementary",
+    "rationale": "可得性捷思讓你只記得新聞上的空難，反事實推理逼你想「沒上頭版的常態長什麼樣」——一個是大腦偷懶，一個是修正捷徑。"
+  },
+  {
+    "source": 32,
+    "target": 45,
+    "type": "lollapalooza",
+    "rationale": "過度自信讓人高估勝率，槓桿把每次下注的後果幾何放大——兩者扣在一起，小錯變大爆炸，LTCM 倒閉就是這條組合的代價。"
+  },
+  {
+    "source": 32,
+    "target": 53,
+    "type": "complementary",
+    "rationale": "迴歸均值把高手拉回平均、過度自信讓人以為自己例外——把一次跑贏大盤當實力、下年押更大注，剛好碰上均值反撲。"
+  },
+  {
+    "source": 32,
+    "target": 55,
+    "type": "complementary",
+    "rationale": "過度自信讓你聚焦個案細節，正好把基礎率擠出視線——「我這案子不一樣」的執行長，常忽略 90% 同類專案早已失敗。"
+  },
+  {
+    "source": 32,
+    "target": 57,
+    "type": "complementary",
+    "rationale": "過度自信壓低尾端風險的主觀機率，黑天鵝偏在尾端引爆——LTCM、雷曼不是不知道有極端事件，是自信不會輪到自己。"
+  },
+  {
+    "source": 32,
+    "target": 62,
+    "type": "complementary",
+    "rationale": "過度自信的解藥是逆向列「我會怎麼搞砸」——失敗模式講出來，自信就冷靜，Amazon 的 pre-mortem 正是這套。"
+  },
+  {
+    "source": 63,
+    "target": 32,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "過度自信本質是把能力圈畫太大——先學會劃邊界，才能辨識「這題超出我能力」，否則自信會被誤讀為進取心。"
+  },
+  {
+    "source": 33,
+    "target": 35,
+    "type": "root",
+    "rationale": "都源於「失去比得到痛苦兩倍」的不對稱——稟賦效應是這條不對稱套到自有資產上的結果，是同一函數的兩個切面。"
+  },
+  {
+    "source": 33,
+    "target": 39,
+    "type": "complementary",
+    "rationale": "稀缺壓縮認知頻寬、損失厭惡放大失去的痛——已經很缺時每一塊流失都被當生死，短視決策變本能，長期最佳化被擠出局。"
+  },
+  {
+    "source": 33,
+    "target": 40,
+    "type": "root",
+    "rationale": "兩者都是 Kahneman 價值函數的延伸——心理帳戶決定參考點在哪個抽屜、損失厭惡決定偏離參考點多痛，同一機制兩切面。"
+  },
+  {
+    "source": 34,
+    "target": 36,
+    "type": "complementary",
+    "rationale": "Cialdini 兩根獨立槓桿——社會認同走「別人都這樣」、互惠走「你欠我一個」；組合起來就是慈善募款與直銷話術的標配。"
+  },
+  {
+    "source": 34,
+    "target": 37,
+    "type": "complementary",
+    "rationale": "Cialdini 兩根槓桿並行——權威是「跟對人」的捷徑、社會認同是「跟多數」的捷徑；當權威是多數推崇者，影響力相乘。"
+  },
+  {
+    "source": 34,
+    "target": 38,
+    "type": "root",
+    "rationale": "兩者本質是同一件事——社會認同是訊號來源（別人怎麼做）、從眾是行為結果（我也跟著做）；前因後果，同一齒輪。"
+  },
+  {
+    "source": 34,
+    "target": 42,
+    "type": "isomorphism",
+    "rationale": "社會認同是心理層的臨界質量——當「在做的人」累積到門檻，剩餘觀望者會自動跟上，TikTok 爆紅曲線就是同構模式。"
+  },
+  {
+    "source": 35,
+    "target": 36,
+    "type": "complementary",
+    "rationale": "稟賦讓你高估自己的所有物、互惠讓你低估對方先給的好處——談判桌上兩力同向作用，「先送樣品再開價」這類老招總有效。"
+  },
+  {
+    "source": 36,
+    "target": 37,
+    "type": "complementary",
+    "rationale": "Cialdini 兩根獨立槓桿——權威建立「他說的對」、互惠建立「我欠他」；白袍醫生先送你小好處，兩力同時扣下扳機。"
+  },
+  {
+    "source": 37,
+    "target": 65,
+    "type": "complementary",
+    "rationale": "權威偏誤把專家的地圖當領土——醫師、分析師也只是各畫一張地圖。記得地圖不等於領土，才會在聽完後仍下到現場印證。"
+  },
+  {
+    "source": 38,
+    "target": 48,
+    "type": "isomorphism",
+    "rationale": "從眾效應是相變在社會場域的版本——個別跟風累積到臨界後，整個群體短時間切換到新狀態，迷因股 GME 暴漲即一場社會相變。"
+  },
+  {
+    "source": 38,
+    "target": 57,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "從眾製造同向下注、同向下注堆出尾端事件——沒有羊群效應就沒有 1929、2008 這類厚尾崩潰，從眾是黑天鵝的孵化器。"
+  },
+  {
+    "source": 39,
+    "target": 40,
+    "type": "complementary",
+    "rationale": "稀缺壓縮認知頻寬、心理帳戶把僅剩頻寬切成更多小盒——窮人借高利貸卻有飲料機儲蓄，正是兩者聯手打碎財務最佳化。"
+  },
+  {
+    "source": 39,
+    "target": 64,
+    "type": "antithetical",
+    "rationale": "稀缺心態正好剝奪二階思考的頻寬——缺錢缺時間時，腦只剩「然後呢」想不到「然後的然後呢」，兩者是壓垮者與被壓垮者。"
+  },
+  {
+    "source": 41,
+    "target": 43,
+    "type": "isomorphism",
+    "rationale": "複利是時間軸上的正向反饋迴路——產出回流成下期本金，數學結構同構；亞馬遜飛輪就是反饋與複利同一張臉的兩個名字。"
+  },
+  {
+    "source": 41,
+    "target": 45,
+    "type": "complementary",
+    "rationale": "複利靠時間慢慢長大、槓桿靠倍數一次放大——方向不同但都是「以小博大」的工具，配對能加速累積，也會放大下行風險。"
+  },
+  {
+    "source": 63,
+    "target": 41,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "複利要長期累積，先得選對賽道——能力圈外的複利只是賭盤。Buffett 七十年複利的前提，正是極度嚴格的能力圈紀律。"
+  },
+  {
+    "source": 42,
+    "target": 48,
+    "type": "root",
+    "rationale": "臨界質量與相變是同一個非線性突變的兩個視角——前者強調「累積到門檻」、後者強調「跨過後狀態切換」，描述同一條 S 曲線。"
+  },
+  {
+    "source": 43,
+    "target": 44,
+    "type": "antithetical",
+    "rationale": "熵讓系統自然走向無序，正向反饋迴路卻能逆勢累積秩序——兩股力量長期拉鋸決定組織命運，停止反饋注入，熵就接管一切。"
+  },
+  {
+    "source": 43,
+    "target": 47,
+    "type": "complementary",
+    "rationale": "反饋迴路告訴你系統怎麼運轉，約束理論告訴你瓶頸卡在哪——前者看全局動態、後者點關鍵節點，搭配才能避免在錯環節死命優化。"
+  },
+  {
+    "source": 43,
+    "target": 64,
+    "type": "complementary",
+    "rationale": "反饋迴路是系統視角，二階思考是決策視角——一個說「輸出會回流」，一個逼你問「回流後我這手棋變什麼」。"
+  },
+  {
+    "source": 44,
+    "target": 46,
+    "type": "complementary",
+    "rationale": "熵保證系統會壞、備援保證壞了不會全倒——前者是無可避免的劣化趨勢，後者是對抗劣化的緩衝，資料中心與航太都靠這對組合。"
+  },
+  {
+    "source": 44,
+    "target": 59,
+    "type": "complementary",
+    "rationale": "熵描述系統會劣化的宏觀趨勢，FMEA 把這種趨勢拆成具體失效路徑——前者解釋為什麼必須維護，後者規劃要維護哪些點。"
+  },
+  {
+    "source": 44,
+    "target": 60,
+    "type": "complementary",
+    "rationale": "熵說系統會自發走向複雜混亂，奧卡姆剃刀逼你持續砍掉不必要結構——後者是組織對抗熵增的日常紀律，少做組織遲早被自己拖垮。"
+  },
+  {
+    "source": 45,
+    "target": 57,
+    "type": "lollapalooza",
+    "rationale": "槓桿放大每次下注的後果，黑天鵝又保證極端事件遲早來臨——疊加會把單一意外變成毀滅級損失，2008 投行倒閉即是案例。"
+  },
+  {
+    "source": 46,
+    "target": 47,
+    "type": "antithetical",
+    "rationale": "備援要求保留冗餘、容忍浪費；約束理論強調聚焦瓶頸、消除非瓶頸投資——兩者在資源配置哲學上正面拉扯，需依風險容忍度權衡。"
+  },
+  {
+    "source": 46,
+    "target": 57,
+    "type": "complementary",
+    "rationale": "黑天鵝告訴你尾端事件必然來，備援告訴你怎麼撐過它——前者是世界觀、後者是工程對策，反脆弱理論的核心即兩者搭配。"
+  },
+  {
+    "source": 46,
+    "target": 59,
+    "type": "complementary",
+    "rationale": "FMEA 找出哪裡可能壞、備援決定哪裡值得多放一份——前者是診斷、後者是處方，缺一邊都會在關鍵時刻露餡。"
+  },
+  {
+    "source": 47,
+    "target": 58,
+    "type": "complementary",
+    "rationale": "第一原理拆解問題到底層事實，約束理論找出整體產出的最弱一環——前者問「真正限制是什麼」、後者答「限制在哪」，是工程雙打。"
+  },
+  {
+    "source": 49,
+    "target": 50,
+    "type": "complementary",
+    "rationale": "自然選擇是外部篩選壓力、適應性是內部回應能力——前者篩走不合者、後者讓合者持續調整，一起構成演化雙引擎，缺一就不轉。"
+  },
+  {
+    "source": 49,
+    "target": 51,
+    "type": "complementary",
+    "rationale": "自然選擇決定誰活下來，生態位決定可以在哪裡活下來——競爭壓力與資源結構共同雕塑命運，企業選賽道時其實是在挑生態位。"
+  },
+  {
+    "source": 49,
+    "target": 52,
+    "type": "complementary",
+    "rationale": "自然選擇也偏好共生策略——當合作回報穩定大於單打獨鬥，互利物種會一起被留下，平台生態的開放夥伴策略即同套邏輯。"
+  },
+  {
+    "source": 50,
+    "target": 51,
+    "type": "complementary",
+    "rationale": "生態位定義生存條件、適應性決定能否跟上條件變動——位置變了卻不調整等於提前出局，Nokia 守在功能機生態位就是教訓。"
+  },
+  {
+    "source": 51,
+    "target": 52,
+    "type": "complementary",
+    "rationale": "生態位界定你周圍有誰、與誰交換——共生與寄生正是同位生物間長期關係的具體形態，平台與第三方開發者常擺盪在這條光譜上。"
+  },
+  {
+    "source": 53,
+    "target": 54,
+    "type": "complementary",
+    "rationale": "迴歸均值提醒極端表現會褪色，倖存者偏差提醒你只看到沒褪色那些——一條糾正對「未來」的預期、一條糾正對「樣本」的選擇。"
+  },
+  {
+    "source": 53,
+    "target": 56,
+    "type": "complementary",
+    "rationale": "迴歸均值常被誤讀成因果（吃藥就好了、罵完表現就回升）——兩者搭配可避免把運氣回歸誤當介入有效，是常見的歸因陷阱。"
+  },
+  {
+    "source": 54,
+    "target": 55,
+    "type": "complementary",
+    "rationale": "倖存者偏差讓分子失真、基礎機率提醒分母被忽略——前者只看活下來的、後者沒看整體基數，兩條補上才能算出真實成功率。"
+  },
+  {
+    "source": 54,
+    "target": 61,
+    "type": "complementary",
+    "rationale": "倖存者偏差只看活下來的樣本，反事實推理逼你想「沒活下來的當初做了什麼」——一個是統計盲點，一個是把消失樣本拉回視野。"
+  },
+  {
+    "source": 55,
+    "target": 60,
+    "type": "complementary",
+    "rationale": "基礎機率提醒先看大樣本發生率、奧卡姆剃刀提醒先選最簡解釋——兩條都是用來抵抗「特殊化敘事」的工具，避免把例外當常態。"
+  },
+  {
+    "source": 63,
+    "target": 55,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "基礎機率要用得準，先得知道自己在哪個類別——能力圈內，base rate 才查得到。離開圈子，分母都選錯。"
+  },
+  {
+    "source": 56,
+    "target": 60,
+    "type": "complementary",
+    "rationale": "看到相關性時，奧卡姆剃刀傾向選「巧合或共同原因」這種簡單解釋——而非急著編因果故事，能擋住大多數虛假的商業洞察。"
+  },
+  {
+    "source": 56,
+    "target": 64,
+    "type": "complementary",
+    "rationale": "看到相關性立刻歸因，是一階思考的典型陷阱——二階思考逼你再問「會不會是反向、會不會是共同原因」，這一停頓就避開荒謬決策。"
+  },
+  {
+    "source": 56,
+    "target": 65,
+    "type": "complementary",
+    "rationale": "相關性是地圖上兩條線一起抖動，因果才是領土裡真正的水管——混淆兩者的人，會以為動冰淇淋銷量能減少溺水案件。"
+  },
+  {
+    "source": 57,
+    "target": 59,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "若不承認尾端事件存在，FMEA 連要列哪些失效模式都會漏項——黑天鵝世界觀是 FMEA 完整性的前提，否則只是半套風控。"
+  },
+  {
+    "source": 57,
+    "target": 62,
+    "type": "complementary",
+    "rationale": "黑天鵝的關鍵是先把「會怎麼炸」列清楚——逆向思考剛好是這套紀律，把尾端風險逐條寫下，再決定要不要曝險。"
+  },
+  {
+    "source": 65,
+    "target": 57,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "用常態分配建模時，先得記得這只是地圖——真實領土的尾巴比鐘形厚得多。少了這道警示，LTCM 式崩盤永遠以新名字重演。"
+  },
+  {
+    "source": 58,
+    "target": 60,
+    "type": "complementary",
+    "rationale": "第一原理負責拆到底、奧卡姆剃刀負責別在中間多塞——前者打破慣例、後者抗拒過度設計，兩者並用即 SpaceX 工程文化雙刀流。"
+  },
+  {
+    "source": 58,
+    "target": 62,
+    "type": "complementary",
+    "rationale": "第一原理拆到底再重組，逆向思考從失敗端反推——一個正面爆破、一個反面排雷，Musk 在 SpaceX 兩套並用。"
+  },
+  {
+    "source": 63,
+    "target": 58,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "第一原理拆得多深，取決於你對該領域真懂多少——超出能力圈，拆出來的「事實」其實是想像。"
+  },
+  {
+    "source": 65,
+    "target": 58,
+    "type": "precondition",
+    "directed": true,
+    "rationale": "第一原理的價值，建立在「現有結論只是地圖」這層警覺——若你深信當前實務是真理，根本不會想拆解。"
+  },
+  {
+    "source": 59,
+    "target": 62,
+    "type": "root",
+    "rationale": "FMEA 就是逆向思考在工程現場的制度化版本——「先列出怎麼壞」與「先問怎麼會失敗」是同一個動作，差別只在表格化。"
+  },
+  {
+    "source": 63,
+    "target": 60,
+    "type": "complementary",
+    "rationale": "奧卡姆說「別多塞」，能力圈說「別越界」——一個對假設動刀、一個對涉獵動刀，合起來就是 Munger 式克制美學。"
+  },
+  {
+    "source": 61,
+    "target": 64,
+    "type": "complementary",
+    "rationale": "反事實處理「沒走的那條路」，二階思考處理「這條路走下去的下一步」——一個橫向比較平行宇宙，一個縱向延伸時間軸。"
   }
 ]
