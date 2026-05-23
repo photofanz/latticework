@@ -1192,6 +1192,79 @@ body[data-view="recommend"] .control-row.chips { display: none; }
   margin-top: 4px;
 }
 
+/* edge-variant tooltip */
+.graph-tooltip .gt-edge-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  flex-wrap: wrap;
+}
+.graph-tooltip .gt-edge-badge {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+.graph-tooltip .gt-edge-pair {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--ink);
+}
+.graph-tooltip .gt-edge-rationale {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+/* Graph edge highlight states */
+.graph-svg .link.is-highlight {
+  stroke-opacity: 1 !important;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+.graph-svg .link.is-dimmed { stroke-opacity: 0.08; }
+
+/* Second legend row for edge types */
+.graph-edge-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  font-size: 11.5px;
+  color: var(--ink-3);
+  padding-top: 8px;
+  margin-top: 8px;
+  border-top: 1px dashed var(--hairline);
+  width: 100%;
+}
+.graph-edge-legend .gel-label {
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-right: 4px;
+}
+.graph-edge-legend .gel-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.graph-edge-legend .gel-swatch {
+  width: 18px;
+  height: 0;
+  border-top: 2px solid var(--gel-color);
+}
+.graph-edge-legend .gel-swatch.dashed { border-top-style: dashed; }
+.graph-edge-legend .gel-swatch.thick { border-top-width: 3px; }
+.graph-edge-legend .gel-swatch.arrow::after {
+  content: " →";
+  color: var(--gel-color);
+  font-size: 12px;
+  vertical-align: middle;
+}
+
 /* ============================================================
    Empty state
    ============================================================ */
@@ -1368,6 +1441,42 @@ body[data-view="recommend"] .control-row.chips { display: none; }
   text-decoration: none;
 }
 .related-link .rl-id { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); margin-right: 6px; }
+
+/* Related card layout — supports type badge + rationale per item */
+.related-link .rl-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.related-link .rl-name { font-weight: 500; }
+.related-link .rl-type-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fff;
+  padding: 1px 7px;
+  border-radius: 3px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.related-link .rl-dir-hint {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-left: 2px;
+}
+.related-link .rl-rationale {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-3);
+  margin: 6px 0 0;
+  padding-top: 6px;
+  border-top: 1px dashed var(--hairline);
+}
+.related-link:has(.rl-rationale) { padding-bottom: 12px; }
 .related-link.is-backlink {
   background: transparent;
   border-style: dashed;

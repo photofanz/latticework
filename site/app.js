@@ -4,6 +4,8 @@
 const state = {
   models: [],
   synergies: [],
+  edges: [],          // edges.json: typed edges with rationale (pilot scope)
+  edgeIndex: new Map(), // "minId-maxId" → edge object
   scenarioVocab: [],
   view: 'wall',
   discipline: 'all',
@@ -15,6 +17,17 @@ const state = {
   recommendText: '',
   theme: localStorage.getItem('lw-theme') || 'light',
 };
+
+// Edge type metadata (mirror of spec/EDGE_TYPES.md)
+const EDGE_TYPES = {
+  root:          { label: '同源',     color: '#B58B3C', stroke: 1.6,  dash: null,        directed: false },
+  complementary: { label: '互補',     color: '#3D6A8C', stroke: 1.4,  dash: null,        directed: false },
+  antithetical:  { label: '拮抗',     color: '#7A2330', stroke: 1.6,  dash: null,        directed: false, double: true },
+  isomorphism:   { label: '跨域映射', color: '#5C508A', stroke: 1.4,  dash: '5 3',       directed: false },
+  lollapalooza:  { label: '互鎖',     color: '#A6553A', stroke: 2.4,  dash: null,        directed: false },
+  precondition:  { label: '前置',     color: '#6B6660', stroke: 1.4,  dash: null,        directed: true },
+};
+function edgeKey(a, b) { const [lo, hi] = a < b ? [a, b] : [b, a]; return `${lo}-${hi}`; }
 
 const $body = document.body;
 const $root = document.documentElement;
@@ -40,12 +53,15 @@ const $empty = document.getElementById('empty');
 async function init() {
   applyTheme();
   try {
-    const [models, synergies] = await Promise.all([
+    const [models, synergies, edges] = await Promise.all([
       fetch('./data/models.json', { cache: 'no-store' }).then(r => r.json()),
       fetch('./data/synergies.json', { cache: 'no-store' }).then(r => r.json()),
+      fetch('./data/edges.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : []).catch(() => []),
     ]);
     state.models = models.sort((a, b) => a.id - b.id);
     state.synergies = synergies;
+    state.edges = edges || [];
+    state.edgeIndex = new Map(state.edges.map(e => [edgeKey(e.source, e.target), e]));
   } catch (err) {
     console.error(err);
     $main.innerHTML = `<div class="empty"><p>資料載入失敗：${esc(err.message)}</p></div>`;
@@ -788,7 +804,15 @@ function renderGraph() {
       const key = `${a}-${b}`;
       if (linkSet.has(key)) continue;
       linkSet.add(key);
-      links.push({ source: m.id, target: r.id });
+      // Look up typed edge metadata; for directed (precondition) edges,
+      // honor the edges.json source→target order so arrow points correctly
+      const meta = state.edgeIndex.get(key) || null;
+      let src = m.id, tgt = r.id;
+      if (meta && meta.type === 'precondition' && meta.directed) {
+        src = meta.source;
+        tgt = meta.target;
+      }
+      links.push({ source: src, target: tgt, edgeKey: key, meta });
     }
   }
   const degree = new Map();
@@ -805,6 +829,21 @@ function renderGraph() {
     </span>
   `).join('');
 
+  // Edge type legend — shows up only if typed edges exist
+  const typedCount = links.filter(l => l.meta).length;
+  const edgeLegendHTML = typedCount === 0 ? '' : (() => {
+    const items = Object.entries(EDGE_TYPES).map(([key, meta]) => {
+      const cls = [meta.dash ? 'dashed' : '', meta.stroke >= 2 ? 'thick' : '', meta.directed ? 'arrow' : ''].filter(Boolean).join(' ');
+      return `<span class="gel-item"><span class="gel-swatch ${cls}" style="--gel-color: ${meta.color};"></span>${esc(meta.label)}</span>`;
+    }).join('');
+    return `
+      <div class="graph-edge-legend">
+        <span class="gel-label">邊類型</span>${items}
+        <span style="margin-left:auto;color:var(--ink-3);font-size:11px;">${typedCount} / ${links.length} 條已分類</span>
+      </div>
+    `;
+  })();
+
   $main.innerHTML = `
     <div class="graph-wrap">
       <div class="graph-header">
@@ -813,6 +852,7 @@ function renderGraph() {
           <span style="font-size:12px;color:var(--ink-3);">${links.length} 條連結 · ${nodes.length} 個節點</span>
           <button class="graph-btn" id="graph-reset">重置版面</button>
         </div>
+        ${edgeLegendHTML}
       </div>
       <div class="graph-svg-wrap">
         <svg class="graph-svg" id="graph-svg"></svg>
@@ -834,10 +874,38 @@ function renderGraph() {
     .on('zoom', e => g.attr('transform', e.transform));
   svg.call(zoom);
 
-  const linkSel = g.append('g').attr('class', 'links').selectAll('line')
-    .data(links)
-    .enter().append('line')
-    .attr('class', 'link');
+  // SVG defs: arrowhead markers per edge type (only precondition uses arrows)
+  const defs = svg.append('defs');
+  defs.append('marker')
+    .attr('id', 'arrow-precondition')
+    .attr('viewBox', '0 -5 10 10')
+    .attr('refX', 14)
+    .attr('refY', 0)
+    .attr('markerWidth', 6)
+    .attr('markerHeight', 6)
+    .attr('orient', 'auto')
+    .append('path')
+    .attr('d', 'M0,-4L9,0L0,4')
+    .attr('fill', EDGE_TYPES.precondition.color);
+
+  const linkLayer = g.append('g').attr('class', 'links');
+  // Invisible wide hit area for better hover/click sensitivity
+  const linkHit = linkLayer.selectAll('line.link-hit')
+    .data(links).enter().append('line')
+    .attr('class', 'link-hit')
+    .attr('stroke', 'transparent')
+    .attr('stroke-width', 12)
+    .attr('pointer-events', 'stroke');
+  // Visible styled lines, dressed by edge type
+  const linkSel = linkLayer.selectAll('line.link')
+    .data(links).enter().append('line')
+    .attr('class', d => 'link' + (d.meta ? ` link-${d.meta.type}` : ''))
+    .attr('stroke', d => d.meta ? EDGE_TYPES[d.meta.type].color : null)
+    .attr('stroke-width', d => d.meta ? EDGE_TYPES[d.meta.type].stroke : null)
+    .attr('stroke-dasharray', d => (d.meta && EDGE_TYPES[d.meta.type].dash) || null)
+    .attr('marker-end', d => (d.meta && d.meta.type === 'precondition' && d.meta.directed)
+        ? 'url(#arrow-precondition)' : null)
+    .attr('opacity', d => d.meta ? 0.85 : null);
 
   const nodeSel = g.append('g').attr('class', 'nodes').selectAll('g.node')
     .data(nodes)
@@ -863,9 +931,10 @@ function renderGraph() {
   state._graphSim = sim;
 
   sim.on('tick', () => {
-    linkSel
-      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+    const x1 = d => d.source.x, y1 = d => d.source.y;
+    const x2 = d => d.target.x, y2 = d => d.target.y;
+    linkSel.attr('x1', x1).attr('y1', y1).attr('x2', x2).attr('y2', y2);
+    linkHit.attr('x1', x1).attr('y1', y1).attr('x2', x2).attr('y2', y2);
     nodeSel.attr('transform', d => `translate(${d.x},${d.y})`);
   });
 
@@ -911,6 +980,39 @@ function renderGraph() {
   nodeSel.on('click', (e, d) => {
     e.stopPropagation();
     openModal(d.id);
+  });
+
+  // Edge hover (via wide invisible hit area)
+  linkHit.style('cursor', d => d.meta ? 'help' : 'default');
+  linkHit.on('mouseenter', (e, d) => {
+    if (!d.meta) return;
+    const meta = EDGE_TYPES[d.meta.type];
+    const srcN = nodeMap.get(typeof d.source === 'object' ? d.source.id : d.source);
+    const tgtN = nodeMap.get(typeof d.target === 'object' ? d.target.id : d.target);
+    const arrow = meta.directed ? '→' : '↔';
+    $tooltip.innerHTML = `
+      <p class="gt-edge-head">
+        <span class="gt-edge-badge" style="background:${meta.color};">${esc(meta.label)}</span>
+        <span class="gt-edge-pair">${esc(srcN.name_zh)} ${arrow} ${esc(tgtN.name_zh)}</span>
+      </p>
+      <p class="gt-edge-rationale">${esc(d.meta.rationale)}</p>
+    `;
+    $tooltip.classList.add('is-visible');
+    // highlight the two endpoints
+    nodeSel.classed('is-dimmed', n => n.id !== srcN.id && n.id !== tgtN.id)
+           .classed('is-highlight', n => n.id === srcN.id || n.id === tgtN.id);
+    linkSel.classed('is-highlight', l => l === d).classed('is-dimmed', l => l !== d);
+  });
+  linkHit.on('mousemove', e => {
+    const rect = wrap.getBoundingClientRect();
+    const x = e.clientX - rect.left + 14;
+    const y = e.clientY - rect.top + 14;
+    $tooltip.style.left = `${Math.min(x, wrap.clientWidth - 320)}px`;
+    $tooltip.style.top = `${Math.min(y, wrap.clientHeight - 160)}px`;
+  });
+  linkHit.on('mouseleave', () => {
+    $tooltip.classList.remove('is-visible');
+    if (!state._graphFocusDisc) clearHighlight();
   });
 
   function highlightNode(id) {
@@ -1044,8 +1146,29 @@ function renderRelated(m) {
     if (!target) return '';
     const cls = isBacklink ? 'related-link is-backlink' : 'related-link';
     const arrow = isBacklink ? '<span class="rl-arrow" title="被該卡引用">←</span>' : '';
+    // Look up typed edge metadata (pilot scope: only Econ×Psych edges have it)
+    const edge = state.edgeIndex.get(edgeKey(m.id, id));
+    let typeBadge = '';
+    let rationale = '';
+    if (edge) {
+      const meta = EDGE_TYPES[edge.type];
+      if (meta) {
+        // for precondition, indicate direction from m's perspective
+        let dirHint = '';
+        if (edge.type === 'precondition' && edge.directed) {
+          if (edge.source === m.id) dirHint = '<span class="rl-dir-hint" title="本卡是先決條件">→</span>';
+          else if (edge.target === m.id) dirHint = '<span class="rl-dir-hint" title="本卡被引出">←</span>';
+        }
+        typeBadge = `<span class="rl-type-badge" style="background:${meta.color};">${esc(meta.label)}</span>${dirHint}`;
+        rationale = `<p class="rl-rationale">${esc(edge.rationale)}</p>`;
+      }
+    }
     return `<a href="#" class="${cls}" data-id="${target.id}">
-      ${arrow}<span class="rl-id">#${pad(target.id)}</span>${esc(target.name_zh)}
+      <div class="rl-head">
+        ${arrow}<span class="rl-id">#${pad(target.id)}</span><span class="rl-name">${esc(target.name_zh)}</span>
+        ${typeBadge}
+      </div>
+      ${rationale}
     </a>`;
   };
 
