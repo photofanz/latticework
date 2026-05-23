@@ -1024,17 +1024,52 @@ function closeModal() {
 }
 
 function renderRelated(m) {
-  if (!m.related || m.related.length === 0) return '';
-  const items = m.related.map(r => {
-    const target = state.models.find(x => x.id === r.id);
+  // outbound — this card's frontmatter `related`
+  const outbound = new Set((m.related || []).map(r => r.id));
+  // inbound — other cards that point to this one
+  const inbound = new Set();
+  for (const other of state.models) {
+    if (other.id === m.id) continue;
+    for (const r of (other.related || [])) {
+      if (r.id === m.id) { inbound.add(other.id); break; }
+    }
+  }
+  // ones that only appear as backlinks (not in outbound)
+  const inboundOnly = [...inbound].filter(id => !outbound.has(id));
+  const total = outbound.size + inboundOnly.length;
+  if (total === 0) return '';
+
+  const renderItem = (id, isBacklink) => {
+    const target = state.models.find(x => x.id === id);
     if (!target) return '';
-    return `<a href="#" class="related-link" data-id="${target.id}">
-      <span class="rl-id">#${pad(target.id)}</span>${esc(target.name_zh)}
+    const cls = isBacklink ? 'related-link is-backlink' : 'related-link';
+    const arrow = isBacklink ? '<span class="rl-arrow" title="被該卡引用">←</span>' : '';
+    return `<a href="#" class="${cls}" data-id="${target.id}">
+      ${arrow}<span class="rl-id">#${pad(target.id)}</span>${esc(target.name_zh)}
     </a>`;
-  }).filter(Boolean).join('');
-  if (!items) return '';
-  return `<h2 style="font-family:var(--serif);font-weight:600;font-size:19px;margin:32px 0 10px;border-left:3px solid var(--card-accent,var(--accent));padding-left:12px;">相關模型</h2>
-    <div class="related-grid">${items}</div>`;
+  };
+
+  const outboundHTML = [...outbound]
+    .sort((a, b) => a - b)
+    .map(id => renderItem(id, false))
+    .filter(Boolean).join('');
+  const backlinkHTML = inboundOnly
+    .sort((a, b) => a - b)
+    .map(id => renderItem(id, true))
+    .filter(Boolean).join('');
+
+  const heading = `<h2 class="related-heading">相關模型 <span class="related-count">${total} 個關係</span></h2>`;
+
+  let body = '';
+  if (outboundHTML) {
+    body += `<div class="related-section-label">本卡標註 <span class="rsl-n">${outbound.size}</span></div>
+             <div class="related-grid">${outboundHTML}</div>`;
+  }
+  if (backlinkHTML) {
+    body += `<div class="related-section-label">被其他模型引用 <span class="rsl-n">${inboundOnly.length}</span></div>
+             <div class="related-grid">${backlinkHTML}</div>`;
+  }
+  return heading + body;
 }
 
 // ---------------------------------------------------------------
