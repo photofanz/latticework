@@ -881,6 +881,144 @@ body[data-view="recommend"] .control-row.chips { display: none; }
   font-size: 14px;
 }
 
+/* Reason chips inside each recommend-item */
+.ri-reasons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 6px 0 8px;
+}
+.reason-chip {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid;
+  font-weight: 500;
+}
+.reason-chip.reason-scenario {
+  background: rgba(122, 35, 48, 0.07);
+  border-color: rgba(122, 35, 48, 0.25);
+  color: var(--accent);
+}
+[data-theme="dark"] .reason-chip.reason-scenario {
+  background: rgba(216, 112, 96, 0.12);
+  border-color: rgba(216, 112, 96, 0.3);
+}
+.reason-chip.reason-kw {
+  background: var(--bg-2);
+  border-color: var(--border);
+  color: var(--ink-2);
+}
+.reason-chip.reason-net {
+  background: rgba(61, 106, 140, 0.08);
+  border-color: rgba(61, 106, 140, 0.25);
+  color: var(--d-systems);
+}
+.reason-chip.reason-disc {
+  background: rgba(181, 139, 60, 0.08);
+  border-color: rgba(181, 139, 60, 0.25);
+  color: var(--d-econ);
+}
+.reason-chip.reason-tier {
+  background: rgba(95, 127, 74, 0.08);
+  border-color: rgba(95, 127, 74, 0.25);
+  color: var(--d-bio);
+}
+
+/* Synergy bundle recommendations */
+.recommend-synergies {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.synergy-mini {
+  background: var(--surface-tint);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+.synergy-mini:hover {
+  background: var(--bg-2);
+  border-left-color: var(--accent-soft);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.syn-mini-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.syn-mini-name {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--ink);
+}
+.syn-mini-overlap {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+  background: rgba(122, 35, 48, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+[data-theme="dark"] .syn-mini-overlap {
+  background: rgba(216, 112, 96, 0.16);
+}
+.syn-mini-subtitle {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-style: italic;
+  font-size: 12px;
+  color: var(--ink-3);
+  margin: 0 0 8px;
+}
+.syn-mini-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.syn-mini-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  padding: 2px 8px;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  color: var(--ink-2);
+}
+.syn-mini-chip .smc-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--chip-accent, var(--accent));
+}
+.syn-mini-chip[data-discipline="經濟學"]            { --chip-accent: var(--d-econ); }
+.syn-mini-chip[data-discipline="心理學"]            { --chip-accent: var(--d-psych); }
+.syn-mini-chip[data-discipline="物理學與系統"]      { --chip-accent: var(--d-systems); }
+.syn-mini-chip[data-discipline="生物學與演化"]      { --chip-accent: var(--d-bio); }
+.syn-mini-chip[data-discipline="統計學"]            { --chip-accent: var(--d-stats); }
+.syn-mini-chip[data-discipline="工程學"]            { --chip-accent: var(--d-eng); }
+.syn-mini-chip[data-discipline="哲學與邏輯"]        { --chip-accent: var(--d-phil); }
+
+.syn-mini-go {
+  font-size: 11.5px;
+  color: var(--accent);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
 /* ============================================================
    View: Graph (D3 force-directed network)
    ============================================================ */

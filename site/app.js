@@ -420,7 +420,7 @@ function renderSynergy() {
       `;
     }).join('');
     return `
-      <article class="synergy-card">
+      <article class="synergy-card" data-synergy-id="${esc(s.id)}">
         <div class="synergy-head">
           <h2 class="synergy-name">${esc(s.name)}</h2>
           <span class="synergy-theme">${esc(s.theme)}</span>
@@ -440,38 +440,39 @@ function renderSynergy() {
 }
 
 // ---------------------------------------------------------------
-// View: Recommend
+// View: Recommend (hybrid scoring: scenario + CJK bigram + multi-signal
+//                 + network bonus + synergy-bundle matching)
 // ---------------------------------------------------------------
 
 function renderRecommend() {
   $empty.hidden = true;
+  // Render the shell only once per view enter; otherwise just refresh results
+  if (!document.getElementById('rec-input')) {
+    renderRecommendShell();
+  } else {
+    document.querySelectorAll('#rec-scenarios .chip').forEach(el =>
+      el.classList.toggle('is-active', el.dataset.rs === state.recommendScenario));
+  }
+  renderRecommendResults();
+}
 
-  const scenarioChipsHTML = state.scenarioVocab.map(([s, n]) =>
+function renderRecommendShell() {
+  const scenarioChipsHTML = state.scenarioVocab.map(([s]) =>
     `<button class="chip ${state.recommendScenario === s ? 'is-active' : ''}" data-rs="${esc(s)}">${esc(s)}</button>`
   ).join('');
-
-  const recommendations = computeRecommendations();
-  $visibleCount.textContent = recommendations.length;
-
-  const resultsHTML = recommendations.length === 0
-    ? `<div class="recommend-empty">選一個情境或輸入關鍵字，下方會列出最相關的模型。</div>`
-    : `<div class="recommend-list">${recommendations.map((m, i) => recommendItemHTML(m, i + 1)).join('')}</div>`;
 
   $main.innerHTML = `
     <div class="recommend-wrap">
       <section class="recommend-prompt">
         <h2>智慧推薦</h2>
-        <p>挑一個情境，或輸入你正在面對的決策（如「正在評估一筆併購」「員工激勵設計」），系統會比對 65 個模型的情境標籤與內文，回傳最相關的 8 個。</p>
+        <p>挑一個情境，或用自然語言輸入你正在面對的決策（如「員工激勵設計」「評估一筆併購」「為何競爭對手都在降價」）。系統會用情境標籤、中文 bigram、模型網路鄰居關係綜合打分，並把命中的加乘組合一併推薦。</p>
         <div class="recommend-scenario-chips" id="rec-scenarios">${scenarioChipsHTML}</div>
         <div class="recommend-input-row">
-          <input id="rec-input" type="text" placeholder="例如：員工流失嚴重、想做新產品 pricing、評估競爭對手…" value="${esc(state.recommendText)}" />
+          <input id="rec-input" type="text" placeholder="例如：員工流失嚴重、想做新產品 pricing、評估競爭對手…" />
           <button id="rec-clear">清除</button>
         </div>
       </section>
-      <section class="recommend-results">
-        <h3>建議參考的模型<span class="count">${recommendations.length} 個</span></h3>
-        ${resultsHTML}
-      </section>
+      <section class="recommend-results-wrap" id="rec-results"></section>
     </div>
   `;
 
@@ -479,61 +480,248 @@ function renderRecommend() {
     el.addEventListener('click', () => {
       const v = el.dataset.rs;
       state.recommendScenario = state.recommendScenario === v ? '' : v;
-      renderRecommend();
+      document.querySelectorAll('#rec-scenarios .chip').forEach(e2 =>
+        e2.classList.toggle('is-active', e2.dataset.rs === state.recommendScenario));
+      renderRecommendResults();
     });
   });
+
   const $recInput = document.getElementById('rec-input');
+  $recInput.value = state.recommendText || '';
   let recDebounce;
   $recInput.addEventListener('input', e => {
     clearTimeout(recDebounce);
     recDebounce = setTimeout(() => {
       state.recommendText = e.target.value.trim();
-      renderRecommend();
-      document.getElementById('rec-input').focus();
-    }, 220);
+      renderRecommendResults();
+    }, 200);
   });
+
   document.getElementById('rec-clear').addEventListener('click', () => {
     state.recommendScenario = '';
     state.recommendText = '';
-    renderRecommend();
+    document.getElementById('rec-input').value = '';
+    document.querySelectorAll('#rec-scenarios .chip').forEach(el => el.classList.remove('is-active'));
+    renderRecommendResults();
   });
-  document.querySelectorAll('.recommend-item').forEach(el => {
+}
+
+function renderRecommendResults() {
+  const { models, synergies, totalSignals } = computeRecommendations();
+  $visibleCount.textContent = models.length;
+  const $results = document.getElementById('rec-results');
+  if (!$results) return;
+
+  if (models.length === 0 && synergies.length === 0) {
+    $results.innerHTML = `<div class="recommend-empty">挑一個情境或輸入關鍵字，下方會列出最相關的模型與加乘組合。</div>`;
+    return;
+  }
+
+  let html = '';
+  if (synergies.length > 0) {
+    html += `<h3>相關加乘組合<span class="count">${synergies.length} 組</span></h3>`;
+    html += `<div class="recommend-synergies">${synergies.map(synergyMiniHTML).join('')}</div>`;
+  }
+  if (models.length > 0) {
+    html += `<h3>建議參考的模型<span class="count">${models.length} 個 · ${totalSignals} 個訊號命中</span></h3>`;
+    html += `<div class="recommend-list">${models.map((x, i) => recommendItemHTML(x, i + 1)).join('')}</div>`;
+  }
+  $results.innerHTML = html;
+
+  $results.querySelectorAll('.recommend-item').forEach(el => {
     el.addEventListener('click', () => openModal(Number(el.dataset.id)));
   });
+  $results.querySelectorAll('.synergy-mini').forEach(el => {
+    el.addEventListener('click', () => {
+      const sid = el.dataset.synergyId;
+      state.view = 'synergy';
+      render();
+      setTimeout(() => {
+        const target = document.querySelector(`[data-synergy-id="${sid}"]`);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 80);
+    });
+  });
 }
+
+function tokenizeQuery(q) {
+  const tokens = new Set();
+  const cleaned = q.toLowerCase().trim();
+  if (!cleaned) return [];
+  tokens.add(cleaned);
+  for (const w of cleaned.split(/\s+/).filter(w => w.length > 0)) {
+    tokens.add(w);
+    if (w.length >= 2 && /[㐀-鿿]/.test(w)) {
+      for (let i = 0; i < w.length - 1; i++) tokens.add(w.slice(i, i + 2));
+    }
+  }
+  return [...tokens];
+}
+
+const SIGNALS = {
+  scenario: 6,
+  tier_core: 1,
+  discipline_match: 4,
+  full_in_name: 5,
+  full_in_case: 4,
+  full_in_summary: 3,
+  bigram_in_name: 3,
+  bigram_in_tag: 2,
+  bigram_in_case: 2,
+  bigram_in_summary: 1,
+  bigram_in_body: 0.5,
+  network_neighbor: 1.5,
+};
 
 function computeRecommendations() {
-  if (!state.recommendScenario && !state.recommendText) return [];
-  const q = state.recommendText.toLowerCase();
+  const scen = state.recommendScenario;
+  const q = state.recommendText.trim();
+  if (!scen && !q) return { models: [], synergies: [], totalSignals: 0 };
+
+  const tokens = q ? tokenizeQuery(q) : [];
+  const qLower = q.toLowerCase();
+  let signalsHit = 0;
+
   const scored = state.models.map(m => {
     let score = 0;
-    if (state.recommendScenario && (m.scenarios || []).includes(state.recommendScenario)) score += 5;
-    if (m.tier === 'core') score += 1;
+    const reasons = [];
+    const matched = new Set();
+
+    if (scen && (m.scenarios || []).includes(scen)) {
+      score += SIGNALS.scenario;
+      reasons.push({ type: 'scenario', label: `情境：${scen}` });
+      signalsHit++;
+    }
+    if (m.tier === 'core') score += SIGNALS.tier_core;
+
     if (q) {
-      const hay = [
-        m.name_zh, m.name_en, m.case_anchor, m.summary || '',
-        (m.tags || []).join(' '), (m.scenarios || []).join(' '),
-        m.body_text || '',
-      ].join(' ').toLowerCase();
-      // each word in q adds to score if found
-      const words = q.split(/\s+/).filter(w => w.length > 0);
-      for (const w of words) {
-        if (hay.includes(w)) score += 2;
-        if (m.name_zh.includes(w) || m.name_en.toLowerCase().includes(w)) score += 2;
+      const nameLower = (m.name_zh + ' ' + m.name_en).toLowerCase();
+      const tagsLower = (m.tags || []).join(' ').toLowerCase();
+      const caseLower = m.case_anchor.toLowerCase();
+      const summaryLower = (m.summary || '').toLowerCase();
+      const bodyLower = (m.body_text || '').toLowerCase();
+      const discLower = m.discipline.toLowerCase();
+
+      // discipline mention
+      if (discLower.includes(qLower) || qLower.includes(discLower)) {
+        score += SIGNALS.discipline_match;
+        reasons.push({ type: 'disc', label: `學科：${m.discipline}` });
+        signalsHit++;
+      }
+
+      // full-query strong match
+      let fullMatched = false;
+      if (m.name_zh.includes(q) || m.name_en.toLowerCase().includes(qLower)) {
+        score += SIGNALS.full_in_name;
+        matched.add(q);
+        fullMatched = true;
+      } else if (caseLower.includes(qLower)) {
+        score += SIGNALS.full_in_case;
+        matched.add(q);
+        fullMatched = true;
+      } else if (summaryLower.includes(qLower)) {
+        score += SIGNALS.full_in_summary;
+        matched.add(q);
+        fullMatched = true;
+      }
+
+      // per-token bigram match (body hits capped at 4 per card to avoid noise)
+      let bodyHits = 0;
+      for (const tok of tokens) {
+        if (tok.length < 2) continue;
+        if (fullMatched && tok === qLower) continue;
+        let hit = false;
+        if (nameLower.includes(tok)) { score += SIGNALS.bigram_in_name; hit = true; }
+        else if (tagsLower.includes(tok)) { score += SIGNALS.bigram_in_tag; hit = true; }
+        else if (caseLower.includes(tok)) { score += SIGNALS.bigram_in_case; hit = true; }
+        else if (summaryLower.includes(tok)) { score += SIGNALS.bigram_in_summary; hit = true; }
+        else if (bodyLower.includes(tok) && bodyHits < 4) {
+          score += SIGNALS.bigram_in_body; hit = true; bodyHits++;
+        }
+        if (hit) matched.add(tok);
+      }
+
+      if (matched.size > 0) {
+        const top3 = [...matched].slice(0, 3).join('、');
+        reasons.push({ type: 'kw', label: `命中「${top3}」` });
+        signalsHit++;
       }
     }
-    return { m, score };
+
+    return { m, score, reasons };
   });
-  return scored
-    .filter(x => x.score > 0)
+
+  // Network bonus: top-scored models lift their immediate neighbors
+  const seeds = scored.filter(x => x.score >= 6).sort((a, b) => b.score - a.score).slice(0, 5);
+  const scoredById = new Map(scored.map(x => [x.m.id, x]));
+  for (const seed of seeds) {
+    for (const r of (seed.m.related || [])) {
+      const target = scoredById.get(r.id);
+      if (!target || target.m.id === seed.m.id) continue;
+      target.score += SIGNALS.network_neighbor;
+      if (!target.reasons.some(rs => rs.type === 'net')) {
+        target.reasons.push({ type: 'net', label: `延伸自「${seed.m.name_zh}」` });
+      }
+    }
+  }
+
+  // Top picks (cap at 8)
+  const top = scored.filter(x => x.score > 0)
     .sort((a, b) => b.score - a.score || a.m.id - b.m.id)
-    .slice(0, 8)
-    .map(x => x.m);
+    .slice(0, 8);
+
+  // Append tier_core badge as final reason if applicable
+  for (const t of top) {
+    if (t.m.tier === 'core' && t.reasons.length < 3
+        && !t.reasons.some(r => r.type === 'tier')) {
+      t.reasons.push({ type: 'tier', label: '常駐模型' });
+    }
+  }
+
+  // Synergy matching: combine model overlap with direct content match
+  // (so bundles like 「泡沫識別工具箱」 surface when the user types「泡沫」
+  //  even if only one of its 4 models scores high individually)
+  const topIds = new Set(top.map(x => x.m.id));
+  const synMatches = state.synergies.map(syn => {
+    const overlap = syn.model_ids.filter(id => topIds.has(id)).length;
+    const total = syn.model_ids.length;
+    const direct = scoreSynergyDirect(syn, scen, q, tokens);
+    const combined = overlap * 2 + direct;
+    return { syn, overlap, total, direct, combined };
+  })
+  .filter(s => s.overlap >= 2 || s.direct >= 3)
+  .sort((a, b) => b.combined - a.combined || b.overlap - a.overlap)
+  .slice(0, 3);
+
+  return { models: top, synergies: synMatches, totalSignals: signalsHit };
 }
 
-function recommendItemHTML(m, rank) {
+function scoreSynergyDirect(syn, scen, q, tokens) {
+  let s = 0;
+  if (scen && syn.theme === scen) s += 3;
+  if (scen && (syn.tags || []).includes(scen)) s += 2;
+  if (!q) return s;
+  const qLower = q.toLowerCase();
+  const text = [syn.name, syn.subtitle, syn.theme, syn.why,
+                (syn.tags || []).join(' ')].join(' ').toLowerCase();
+  if (syn.name.includes(q)) s += 5;
+  if (syn.subtitle.toLowerCase().includes(qLower)) s += 2;
+  for (const tok of tokens) {
+    if (tok.length < 2) continue;
+    if (tok === qLower) continue;
+    if (syn.name.includes(tok)) s += 3;
+    else if (syn.theme.includes(tok)) s += 1.5;
+    else if (text.includes(tok)) s += 0.7;
+  }
+  return s;
+}
+
+function recommendItemHTML(item, rank) {
+  const { m, reasons } = item;
   const scenarios = (m.scenarios || []).slice(0, 3)
     .map(s => `<span class="scenario-tag">${esc(s)}</span>`).join('');
+  const reasonChips = (reasons || []).slice(0, 3)
+    .map(r => `<span class="reason-chip reason-${r.type}">${esc(r.label)}</span>`).join('');
   return `
     <article class="recommend-item" data-id="${m.id}">
       <div class="ri-rank">${rank}</div>
@@ -545,8 +733,28 @@ function recommendItemHTML(m, rank) {
           <span>▸ ${esc(m.case_anchor)}</span>
           ${scenarios}
         </div>
+        ${reasonChips ? `<div class="ri-reasons">${reasonChips}</div>` : ''}
         <p class="ri-summary">${esc(m.summary || '')}</p>
       </div>
+    </article>
+  `;
+}
+
+function synergyMiniHTML({ syn, overlap, total }) {
+  const chips = syn.model_ids.slice(0, 5).map(id => {
+    const m = state.models.find(x => x.id === id);
+    if (!m) return '';
+    return `<span class="syn-mini-chip" data-discipline="${esc(m.discipline)}"><span class="smc-dot"></span>${esc(m.name_zh)}</span>`;
+  }).filter(Boolean).join('');
+  return `
+    <article class="synergy-mini" data-synergy-id="${esc(syn.id)}">
+      <div class="syn-mini-head">
+        <strong class="syn-mini-name">${esc(syn.name)}</strong>
+        <span class="syn-mini-overlap">命中 ${overlap}/${total}</span>
+      </div>
+      <p class="syn-mini-subtitle">${esc(syn.subtitle)}</p>
+      <div class="syn-mini-chips">${chips}</div>
+      <span class="syn-mini-go">查看完整組合 →</span>
     </article>
   `;
 }
