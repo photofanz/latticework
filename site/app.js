@@ -111,6 +111,12 @@ function render() {
     t.classList.toggle('is-active', t.dataset.view === state.view);
   });
 
+  // tear down any prior graph simulation
+  if (state._graphSim) {
+    try { state._graphSim.stop(); } catch (_) {}
+    state._graphSim = null;
+  }
+
   // call view renderer
   switch (state.view) {
     case 'wall': renderWall(); break;
@@ -118,6 +124,7 @@ function render() {
     case 'evidence': renderEvidence(); break;
     case 'synergy': renderSynergy(); break;
     case 'recommend': renderRecommend(); break;
+    case 'graph': renderGraph(); break;
   }
 }
 
@@ -542,6 +549,224 @@ function recommendItemHTML(m, rank) {
       </div>
     </article>
   `;
+}
+
+// ---------------------------------------------------------------
+// View: Graph (D3 force-directed)
+// ---------------------------------------------------------------
+
+function renderGraph() {
+  $empty.hidden = true;
+  $visibleCount.textContent = state.models.length;
+
+  if (typeof d3 === 'undefined') {
+    $main.innerHTML = `<div class="empty"><p>D3 函式庫尚未載入，請重整頁面。</p></div>`;
+    return;
+  }
+
+  // Build nodes & links
+  const nodes = state.models.map(m => ({
+    id: m.id, name_zh: m.name_zh, name_en: m.name_en,
+    discipline: m.discipline, tier: m.tier,
+    case_anchor: m.case_anchor, summary: m.summary,
+  }));
+  const nodeMap = new Map(nodes.map(n => [n.id, n]));
+  const linkSet = new Set();
+  const links = [];
+  for (const m of state.models) {
+    for (const r of (m.related || [])) {
+      if (!nodeMap.has(r.id)) continue;
+      const [a, b] = m.id < r.id ? [m.id, r.id] : [r.id, m.id];
+      const key = `${a}-${b}`;
+      if (linkSet.has(key)) continue;
+      linkSet.add(key);
+      links.push({ source: m.id, target: r.id });
+    }
+  }
+  const degree = new Map();
+  for (const l of links) {
+    degree.set(l.source, (degree.get(l.source) || 0) + 1);
+    degree.set(l.target, (degree.get(l.target) || 0) + 1);
+  }
+
+  const disciplineOrder = ['經濟學', '心理學', '物理學與系統', '生物學與演化', '統計學', '工程學', '哲學與邏輯'];
+  const legendHTML = disciplineOrder.map(d => `
+    <span class="graph-legend-item" data-discipline="${esc(d)}" style="--lg-color: var(--d-${disciplineShortCode(d)});">
+      <span class="lg-dot"></span>
+      <span>${esc(d)}</span>
+    </span>
+  `).join('');
+
+  $main.innerHTML = `
+    <div class="graph-wrap">
+      <div class="graph-header">
+        <div class="graph-legend" id="graph-legend">${legendHTML}</div>
+        <div class="graph-actions">
+          <span style="font-size:12px;color:var(--ink-3);">${links.length} 條連結 · ${nodes.length} 個節點</span>
+          <button class="graph-btn" id="graph-reset">重置版面</button>
+        </div>
+      </div>
+      <div class="graph-svg-wrap">
+        <svg class="graph-svg" id="graph-svg"></svg>
+        <div class="graph-tooltip" id="graph-tooltip"></div>
+      </div>
+    </div>
+  `;
+
+  const svgEl = document.getElementById('graph-svg');
+  const wrap = svgEl.parentElement;
+  const W = wrap.clientWidth || 1100;
+  const H = wrap.clientHeight || 680;
+  const svg = d3.select(svgEl).attr('viewBox', `0 0 ${W} ${H}`);
+
+  const g = svg.append('g');
+
+  const zoom = d3.zoom()
+    .scaleExtent([0.3, 4])
+    .on('zoom', e => g.attr('transform', e.transform));
+  svg.call(zoom);
+
+  const linkSel = g.append('g').attr('class', 'links').selectAll('line')
+    .data(links)
+    .enter().append('line')
+    .attr('class', 'link');
+
+  const nodeSel = g.append('g').attr('class', 'nodes').selectAll('g.node')
+    .data(nodes)
+    .enter().append('g')
+    .attr('class', d => 'node' + (d.tier === 'core' ? ' is-core' : ''))
+    .attr('data-discipline', d => d.discipline);
+
+  nodeSel.append('circle')
+    .attr('r', d => nodeRadius(degree.get(d.id) || 0, d.tier))
+    .attr('style', d => `fill: var(--d-${disciplineShortCode(d.discipline)})`);
+
+  nodeSel.append('text')
+    .attr('dy', d => -nodeRadius(degree.get(d.id) || 0, d.tier) - 4)
+    .text(d => d.name_zh);
+
+  const sim = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d => d.id).distance(85).strength(0.35))
+    .force('charge', d3.forceManyBody().strength(-300))
+    .force('center', d3.forceCenter(W / 2, H / 2))
+    .force('collide', d3.forceCollide().radius(d => nodeRadius(degree.get(d.id) || 0, d.tier) + 10))
+    .alpha(1)
+    .alphaDecay(0.025);
+  state._graphSim = sim;
+
+  sim.on('tick', () => {
+    linkSel
+      .attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+      .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+    nodeSel.attr('transform', d => `translate(${d.x},${d.y})`);
+  });
+
+  nodeSel.call(d3.drag()
+    .on('start', (e, d) => {
+      if (!e.active) sim.alphaTarget(0.3).restart();
+      d.fx = d.x; d.fy = d.y;
+    })
+    .on('drag', (e, d) => { d.fx = e.x; d.fy = e.y; })
+    .on('end', (e, d) => {
+      if (!e.active) sim.alphaTarget(0);
+      d.fx = null; d.fy = null;
+    })
+  );
+
+  const $tooltip = document.getElementById('graph-tooltip');
+  nodeSel.on('mouseenter', (e, d) => {
+    const deg = degree.get(d.id) || 0;
+    $tooltip.innerHTML = `
+      <p class="gt-name">${esc(d.name_zh)}</p>
+      <p class="gt-en">${esc(d.name_en)}</p>
+      <p class="gt-meta">
+        <span class="disc-badge" style="--card-accent: var(--d-${disciplineShortCode(d.discipline)});">${esc(d.discipline)}</span>
+        <span class="tier-badge ${d.tier}">${d.tier === 'core' ? '常駐' : '字典'}</span>
+      </p>
+      <p class="gt-case">▸ ${esc(d.case_anchor)}</p>
+      <p class="gt-degree">${deg} 個跨連結</p>
+    `;
+    $tooltip.classList.add('is-visible');
+    highlightNode(d.id);
+  });
+  nodeSel.on('mousemove', e => {
+    const rect = wrap.getBoundingClientRect();
+    const x = e.clientX - rect.left + 14;
+    const y = e.clientY - rect.top + 14;
+    $tooltip.style.left = `${Math.min(x, wrap.clientWidth - 300)}px`;
+    $tooltip.style.top = `${Math.min(y, wrap.clientHeight - 140)}px`;
+  });
+  nodeSel.on('mouseleave', () => {
+    $tooltip.classList.remove('is-visible');
+    if (!state._graphFocusDisc) clearHighlight();
+  });
+  nodeSel.on('click', (e, d) => {
+    e.stopPropagation();
+    openModal(d.id);
+  });
+
+  function highlightNode(id) {
+    const neighbors = new Set([id]);
+    for (const l of links) {
+      const sid = typeof l.source === 'object' ? l.source.id : l.source;
+      const tid = typeof l.target === 'object' ? l.target.id : l.target;
+      if (sid === id) neighbors.add(tid);
+      if (tid === id) neighbors.add(sid);
+    }
+    nodeSel.classed('is-dimmed', d => !neighbors.has(d.id))
+           .classed('is-highlight', d => d.id === id);
+    linkSel.classed('is-highlight', d => {
+      const sid = typeof d.source === 'object' ? d.source.id : d.source;
+      const tid = typeof d.target === 'object' ? d.target.id : d.target;
+      return sid === id || tid === id;
+    }).classed('is-dimmed', d => {
+      const sid = typeof d.source === 'object' ? d.source.id : d.source;
+      const tid = typeof d.target === 'object' ? d.target.id : d.target;
+      return sid !== id && tid !== id;
+    });
+  }
+  function clearHighlight() {
+    nodeSel.classed('is-dimmed', false).classed('is-highlight', false);
+    linkSel.classed('is-highlight', false).classed('is-dimmed', false);
+  }
+
+  // legend interaction
+  document.querySelectorAll('#graph-legend .graph-legend-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const d = el.dataset.discipline;
+      state._graphFocusDisc = state._graphFocusDisc === d ? null : d;
+      document.querySelectorAll('#graph-legend .graph-legend-item').forEach(ell => {
+        ell.classList.toggle('is-dimmed',
+          state._graphFocusDisc && ell.dataset.discipline !== state._graphFocusDisc);
+      });
+      if (state._graphFocusDisc) {
+        nodeSel.classed('is-dimmed', n => n.discipline !== state._graphFocusDisc)
+               .classed('is-highlight', false);
+        linkSel.classed('is-dimmed', l => {
+          const s = typeof l.source === 'object' ? l.source : nodeMap.get(l.source);
+          const t = typeof l.target === 'object' ? l.target : nodeMap.get(l.target);
+          return s.discipline !== state._graphFocusDisc && t.discipline !== state._graphFocusDisc;
+        }).classed('is-highlight', false);
+      } else {
+        clearHighlight();
+      }
+    });
+  });
+
+  document.getElementById('graph-reset').addEventListener('click', () => {
+    nodes.forEach(n => { n.fx = null; n.fy = null; });
+    sim.alpha(1).restart();
+    svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity);
+    state._graphFocusDisc = null;
+    document.querySelectorAll('#graph-legend .graph-legend-item').forEach(el =>
+      el.classList.remove('is-dimmed'));
+    clearHighlight();
+  });
+}
+
+function nodeRadius(deg, tier) {
+  const base = tier === 'core' ? 10 : 6.5;
+  return Math.min(base + deg * 0.55, 16);
 }
 
 // ---------------------------------------------------------------
