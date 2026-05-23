@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Latticework · 65 種商業心智模型工具箱</title>
+  <meta name="description" content="跨學科心智模型全庫——65 種模型 · 7 大學科 · 卡片牆 / 表格 / 實證個案 / 加乘組合 / 智慧推薦 五種視圖。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;600;700&family=Noto+Sans+TC:wght@300;400;500;600&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-view="wall">
+  <header class="site-header">
+    <div class="header-row top">
+      <div class="brand-mark">CHARLIE MUNGER · THE COMPLETE LATTICEWORK</div>
+      <div class="header-actions">
+        <button id="theme-toggle" class="icon-btn" aria-label="切換深淺色" title="切換深淺色">
+          <span class="theme-icon-light">☀</span>
+          <span class="theme-icon-dark">☾</span>
+        </button>
+      </div>
+    </div>
+    <h1 class="brand-title">六十五種心智模型的商業工具箱</h1>
+    <p class="brand-tagline">A cross-disciplinary toolkit for clearer business thinking — 經濟學 · 心理學 · 系統 · 演化 · 統計 · 工程 · 哲學</p>
+    <div class="header-stats">
+      <span class="stat"><b id="visible-count">65</b><span>模型</span></span>
+      <span class="stat-sep">·</span>
+      <span class="stat"><b id="core-count">—</b><span>常駐</span></span>
+      <span class="stat-sep">·</span>
+      <span class="stat"><b>7</b><span>學科</span></span>
+      <span class="stat-sep">·</span>
+      <span class="stat"><b id="synergy-count">—</b><span>加乘組合</span></span>
+    </div>
+  </header>
+
+  <nav class="tab-bar" id="tabs" role="tablist">
+    <button class="tab is-active" data-view="wall" role="tab">卡片牆</button>
+    <button class="tab" data-view="table" role="tab">表格</button>
+    <button class="tab" data-view="evidence" role="tab">實證個案</button>
+    <button class="tab" data-view="synergy" role="tab">加乘組合</button>
+    <button class="tab" data-view="recommend" role="tab">✦ 智慧推薦</button>
+  </nav>
+
+  <section class="controls" id="controls">
+    <div class="control-row primary">
+      <div class="search-wrap">
+        <input id="search" type="search" placeholder="搜尋模型、案例或關鍵字（如 Netflix、複利、激勵）…" autocomplete="off" />
+        <span class="search-hint">⌘K</span>
+      </div>
+      <div class="sort-wrap">
+        <label for="sort">排序</label>
+        <select id="sort">
+          <option value="id">編號</option>
+          <option value="tier">常駐優先</option>
+          <option value="name">按名稱</option>
+          <option value="discipline">按學科</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="control-row chips">
+      <div class="chip-group" data-facet="discipline">
+        <button class="chip is-active" data-value="all">全部</button>
+        <button class="chip" data-value="經濟學">經濟學 <span class="chip-count">28</span></button>
+        <button class="chip" data-value="心理學">心理學 <span class="chip-count">12</span></button>
+        <button class="chip" data-value="物理學與系統">物理 &amp; 系統 <span class="chip-count">8</span></button>
+        <button class="chip" data-value="生物學與演化">生物 &amp; 演化 <span class="chip-count">4</span></button>
+        <button class="chip" data-value="統計學">統計學 <span class="chip-count">5</span></button>
+        <button class="chip" data-value="工程學">工程學 <span class="chip-count">3</span></button>
+        <button class="chip" data-value="哲學與邏輯">哲學 &amp; 邏輯 <span class="chip-count">5</span></button>
+      </div>
+    </div>
+
+    <div class="control-row chips scenario-row">
+      <div class="chip-group small" data-facet="scenario" id="scenario-chips">
+        <button class="chip is-active small" data-value="all">所有情境</button>
+        <!-- scenarios populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <main id="main" class="main" aria-live="polite"></main>
+
+  <div id="empty" class="empty" hidden>
+    <p>找不到符合條件的內容。試試其他關鍵字或調整篩選。</p>
+  </div>
+
+  <footer class="site-footer">
+    <p>Latticework · 65 Mental Models · 商業應用全庫</p>
+    <p class="footer-sub">向 Charlie Munger 的跨學科思維致敬 — 本站內容為一般商業教育用途。</p>
+  </footer>
+
+  <div id="modal" class="modal" hidden aria-modal="true" role="dialog">
+    <div class="modal-backdrop" data-close="1"></div>
+    <article class="modal-panel" id="modal-panel"></article>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
